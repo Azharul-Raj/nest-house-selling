@@ -9,3 +9,56 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+enum PropertyType{
+  RESIDEANTIAL
+  CONDO
+}
+
+model User{
+  id                String  @id()   @default(auto())  @map("_id")   @db.ObjectId
+  name              String
+  email             String  @unique
+  password          String
+  role              String
+  houses            House[]
+  buyer_messages    Message[] @relation("buyer_messages")
+  realtor_messages  Message[] @relation("realtor_messages")
+}
+
+
+model House{
+  id            String  @id()   @default(auto())  @map("_id")   @db.ObjectId
+  address       String
+  bathrooms     Int
+  bedrooms      Int
+  city          String          
+  listed_date   DateTime         @default(now())
+  price         Float
+  land_size     Float
+  property_type PropertyType
+  Images        Image[]     
+  realtor_id    String    @db.ObjectId
+  realtor       User      @relation(fields: [realtor_id],references: [id])
+  messages      Message[]
+}
+
+model Image{
+  id            String  @id()   @default(auto())  @map("_id")   @db.ObjectId
+  url           String
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  house_id      String  @db.ObjectId
+  house         House   @relation(fields: [house_id],references: [id]) 
+}
+
+model Message{
+  id            String  @id()   @default(auto())  @map("_id")   @db.ObjectId
+  message       String
+  house_id      String  @db.ObjectId
+  house         House   @relation(fields: [house_id],references: [id])
+  buyer_id      String                                          @db.ObjectId
+  buyer         User    @relation("buyer_messages", fields: [buyer_id],references: [id])
+  realtor_id    String                                          @db.ObjectId
+  realtor       User    @relation("realtor_messages", fields:[realtor_id],references: [id])
+}
