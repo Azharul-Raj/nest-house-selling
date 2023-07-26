@@ -20,3 +20,12 @@ export class signupDto{
     @IsNotEmpty()
     role:string
 }
+
+export class signinDto{
+    @IsEmail()
+    email:string
+
+    @IsString()
+    @IsNotEmpty()
+    password:string
+}
