@@ -6,7 +6,8 @@ import { signupDto } from 'src/dtos/authdto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('/signup')
-  signup(@Body() data: signupDto) {
-    
+   async signup(@Body() data: signupDto) {
+    const user= await this.authService.signupService(data)
+    console.log(user)
   }
 }
