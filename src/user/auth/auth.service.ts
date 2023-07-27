@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt'
 
 import { getToken } from 'src/utils/getToken';
+import { UserType } from '@prisma/client';
 
 
 interface userInfo{
@@ -10,7 +11,7 @@ interface userInfo{
     email:string
     phone:string
     password:string
-    role:string
+    role:'admin'|'buyer'|'realtor'
 }
 
 interface signInInfo{
@@ -47,5 +48,11 @@ export class AuthService {
     //get user
     async getUserService(id){
         return await this.prismaService.user.findUnique({where:{id}})
+    }
+
+
+    generateProductKeyService(email:string,userType:UserType){
+        const info=`${email}-${userType}-${process.env.PRODUCT_KEY}`
+        return bcrypt.hash(info,10);
     }
 }
