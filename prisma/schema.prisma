@@ -50,6 +50,8 @@ model House{
   realtor_id    String    @db.ObjectId
   realtor       User      @relation(fields: [realtor_id],references: [id])
   messages      Message[]
+  created_at    DateTime  @default(now())
+  updated_at    DateTime
 }
 
 model Image{
